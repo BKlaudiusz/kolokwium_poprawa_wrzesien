@@ -77,6 +77,17 @@ class OvenTest {
     }
 
     @Test
+    void whenCantgrillShoudReturnExeption() throws HeatingException {
+        doThrow(HeatingException.class).when(heatingModule).grill(any(HeatingSettings.class));
+        bakingProgram = BakingProgram.builder()
+                .withStages(programStageListWithGrill)
+                .withInitialTemp(0)
+                .build();
+
+        Assertions.assertThrows(OvenException.class, () -> oven.runProgram(bakingProgram));
+    }
+
+    @Test
     void whenIsTHERMO_CIRCULATIONShoudRunFanAndOffFan()
     {
         List<ProgramStage> programStageList1 = List.of(
@@ -139,4 +150,6 @@ class OvenTest {
 
         verify(heatingModule, times(2)).heater(any(HeatingSettings.class));
     }
+
+
 }
