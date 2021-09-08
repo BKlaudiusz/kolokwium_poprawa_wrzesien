@@ -79,7 +79,27 @@ class OvenTest {
         callOrder.verify(fan).on();
         callOrder.verify(fan).off();
     }
+    @Test
+   void  whenHeatTypeIsGrillShoudCheckFanisOnAndTurnOffHim()
+    {
+        List<ProgramStage> programStageList1 = List.of(
+                ProgramStage.builder()
+                        .withStageTime(50)
+                        .withHeat(HeatType.GRILL)
+                        .withTargetTemp(100)
+                        .build());
+
+        bakingProgram = BakingProgram.builder()
+                .withStages(programStageList1)
+                .withInitialTemp(100)
+                .build();
 
 
+        when(fan.isOn()).thenReturn(true);
+        oven.runProgram(bakingProgram);
 
+        InOrder callOrder = inOrder(fan);
+        callOrder.verify(fan).isOn();
+        callOrder.verify(fan).off();
+    }
 }
