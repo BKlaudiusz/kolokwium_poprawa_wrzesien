@@ -28,27 +28,31 @@ class OvenTest {
     @Mock
     Fan fan;
 
+    int SAMPLE_TEMPERATURE = 100;
+    int SAMPLE_STAGE_TIME = 50;
+
     List<ProgramStage> programStageList = List.of(
             ProgramStage.builder()
-                    .withStageTime(50)
+                    .withStageTime(SAMPLE_STAGE_TIME)
                     .withHeat(HeatType.GRILL)
-                    .withTargetTemp(100)
+                    .withTargetTemp(SAMPLE_TEMPERATURE)
                     .build(),
             ProgramStage.builder()
-                    .withStageTime(20)
+                    .withStageTime(SAMPLE_STAGE_TIME)
                     .withHeat(HeatType.HEATER)
-                    .withTargetTemp(100)
+                    .withTargetTemp(SAMPLE_TEMPERATURE)
                     .build()
     );
 
     List<ProgramStage> programStageListWithGrill = List.of(
             ProgramStage.builder()
-                    .withStageTime(50)
+                    .withStageTime(SAMPLE_STAGE_TIME)
                     .withHeat(HeatType.GRILL)
-                    .withTargetTemp(100)
+                    .withTargetTemp(SAMPLE_TEMPERATURE)
                     .build());
 
     BakingProgram bakingProgram;
+
     Oven oven;
 
     @BeforeEach
@@ -56,7 +60,7 @@ class OvenTest {
         oven = new Oven(heatingModule, fan);
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageList)
-                .withInitialTemp(100)
+                .withInitialTemp(SAMPLE_TEMPERATURE)
                 .build();
     }
     @Test
@@ -70,14 +74,14 @@ class OvenTest {
     {
         List<ProgramStage> programStageList1 = List.of(
                 ProgramStage.builder()
-                        .withStageTime(50)
+                        .withStageTime(SAMPLE_STAGE_TIME)
                         .withHeat(HeatType.THERMO_CIRCULATION)
-                        .withTargetTemp(100)
+                        .withTargetTemp(SAMPLE_TEMPERATURE)
                         .build());
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageList1)
-                .withInitialTemp(100)
+                .withInitialTemp(SAMPLE_TEMPERATURE)
                 .build();
 
         oven.runProgram(bakingProgram);
@@ -108,13 +112,12 @@ class OvenTest {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
-                .withInitialTemp(100)
+                .withInitialTemp(0)
                 .build();
 
         oven.runProgram(bakingProgram);
 
         verify(heatingModule, times(1)).grill(any(HeatingSettings.class));
-        verify(heatingModule, times(1)).heater(any(HeatingSettings.class));
-
+        verify(heatingModule, times(0)).heater(any(HeatingSettings.class));
     }
 }
