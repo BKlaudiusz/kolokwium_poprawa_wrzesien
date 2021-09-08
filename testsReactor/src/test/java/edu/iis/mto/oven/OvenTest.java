@@ -151,5 +151,20 @@ class OvenTest {
         verify(heatingModule, times(2)).heater(any(HeatingSettings.class));
     }
 
+    @Test
+    void whenCoolAtFinishInBackingProgramIsTrueShoudTurnOnFanApterBakingPragram()  {
+
+        bakingProgram = BakingProgram.builder()
+                .withStages(programStageListWithHEATER)
+                .withInitialTemp(50).withCoolAtFinish(true)
+                .build();
+
+
+        when(fan.isOn()).thenReturn(true);
+
+        oven.runProgram(bakingProgram);
+
+        verify(fan, times(1)).on();
+    }
 
 }
