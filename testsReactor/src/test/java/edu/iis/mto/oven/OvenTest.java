@@ -44,6 +44,13 @@ class OvenTest {
                     .build()
     );
 
+    List<ProgramStage> programStageListWithHEATER = List.of(
+            ProgramStage.builder()
+                    .withStageTime(SAMPLE_STAGE_TIME)
+                    .withHeat(HeatType.HEATER)
+                    .withTargetTemp(SAMPLE_TEMPERATURE)
+                    .build());
+
     List<ProgramStage> programStageListWithGrill = List.of(
             ProgramStage.builder()
                     .withStageTime(SAMPLE_STAGE_TIME)
@@ -119,5 +126,17 @@ class OvenTest {
 
         verify(heatingModule, times(1)).grill(any(HeatingSettings.class));
         verify(heatingModule, times(0)).heater(any(HeatingSettings.class));
+    }
+    @Test
+    void whenHeatTypeIsHeaterAndStartTemperatureBiggestThat0ShoudHeaterRun2Times() throws HeatingException {
+
+        bakingProgram = BakingProgram.builder()
+                .withStages(programStageListWithHEATER)
+                .withInitialTemp(50)
+                .build();
+
+        oven.runProgram(bakingProgram);
+
+        verify(heatingModule, times(2)).heater(any(HeatingSettings.class));
     }
 }
