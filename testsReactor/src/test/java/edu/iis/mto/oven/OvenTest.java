@@ -24,6 +24,7 @@ class OvenTest {
     Fan fan;
 
     int SAMPLE_TEMPERATURE = 100;
+    int ZERO_TEMPERATURE = 100;
     int SAMPLE_STAGE_TIME = 50;
 
     List<ProgramStage> programStageList = List.of(
@@ -76,7 +77,7 @@ class OvenTest {
         doThrow(HeatingException.class).when(heatingModule).grill(any(HeatingSettings.class));
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
-                .withInitialTemp(0)
+                .withInitialTemp(ZERO_TEMPERATURE)
                 .build();
 
         Assertions.assertThrows(OvenException.class, () -> oven.runProgram(bakingProgram));
@@ -108,7 +109,7 @@ class OvenTest {
     {
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
-                .withInitialTemp(100)
+                .withInitialTemp(SAMPLE_TEMPERATURE)
                 .build();
 
 
@@ -125,7 +126,7 @@ class OvenTest {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
-                .withInitialTemp(0)
+                .withInitialTemp(ZERO_TEMPERATURE)
                 .build();
 
         oven.runProgram(bakingProgram);
@@ -138,7 +139,7 @@ class OvenTest {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithHEATER)
-                .withInitialTemp(50)
+                .withInitialTemp(SAMPLE_TEMPERATURE)
                 .build();
 
         oven.runProgram(bakingProgram);
@@ -157,6 +158,7 @@ class OvenTest {
         when(fan.isOn()).thenReturn(true);
 
         oven.runProgram(bakingProgram);
+
 
         verify(fan, times(1)).on();
     }
