@@ -42,7 +42,6 @@ class OvenTest {
     );
 
     BakingProgram bakingProgram;
-
     Oven oven;
 
     @BeforeEach
@@ -57,7 +56,30 @@ class OvenTest {
     void whenCantHeatOvenShoudReturnExeption() throws HeatingException {
         doThrow(HeatingException.class).when(heatingModule).heater(any(HeatingSettings.class));
         Assertions.assertThrows(OvenException.class, () -> oven.runProgram(bakingProgram));
-
     }
+
+    @Test
+    void whenIsTHERMO_CIRCULATIONShoudRunFanAndOffFan()
+    {
+        List<ProgramStage> programStageList1 = List.of(
+                ProgramStage.builder()
+                        .withStageTime(50)
+                        .withHeat(HeatType.THERMO_CIRCULATION)
+                        .withTargetTemp(100)
+                        .build());
+
+        bakingProgram = BakingProgram.builder()
+                .withStages(programStageList1)
+                .withInitialTemp(100)
+                .build();
+
+        oven.runProgram(bakingProgram);
+
+        InOrder callOrder = inOrder(fan);
+        callOrder.verify(fan).on();
+        callOrder.verify(fan).off();
+    }
+
+
 
 }
