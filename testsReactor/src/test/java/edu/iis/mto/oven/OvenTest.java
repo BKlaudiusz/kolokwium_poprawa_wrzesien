@@ -1,13 +1,9 @@
 package edu.iis.mto.oven;
 
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
-
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +12,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,13 +66,13 @@ class OvenTest {
                 .build();
     }
     @Test
-    void whenCantHeatOvenShoudReturnExeption() throws HeatingException {
+    void whenCantHeatOvenShouldReturnException() throws HeatingException {
         doThrow(HeatingException.class).when(heatingModule).heater(any(HeatingSettings.class));
         Assertions.assertThrows(OvenException.class, () -> oven.runProgram(bakingProgram));
     }
 
     @Test
-    void whenCantgrillShoudReturnExeption() throws HeatingException {
+    void whenCantNOtgrillShoudReturnExeption() throws HeatingException {
         doThrow(HeatingException.class).when(heatingModule).grill(any(HeatingSettings.class));
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
@@ -88,7 +83,7 @@ class OvenTest {
     }
 
     @Test
-    void whenIsTHERMO_CIRCULATIONShoudRunFanAndOffFan()
+    void whenIsTHERM_CIRCULATIONShouldRunFanAndOffFan()
     {
         List<ProgramStage> programStageList1 = List.of(
                 ProgramStage.builder()
@@ -109,7 +104,7 @@ class OvenTest {
         callOrder.verify(fan).off();
     }
     @Test
-   void whenHeatTypeIsGrillShoudCheckFanisOnAndTurnOffHim()
+   void whenHeatTypeIsGrillShouldCheckFanIsOnAndTurnOffHim()
     {
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
@@ -126,7 +121,7 @@ class OvenTest {
     }
 
     @Test
-    void whenHeatTypeIsGrillshoudTurnOngrillModule() throws HeatingException {
+    void whenHeatTypeIsGrillShouldTurnOnGrillModule() throws HeatingException {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithGrill)
@@ -139,7 +134,7 @@ class OvenTest {
         verify(heatingModule, times(0)).heater(any(HeatingSettings.class));
     }
     @Test
-    void whenHeatTypeIsHeaterAndStartTemperatureBiggestThat0ShoudHeaterRun2Times() throws HeatingException {
+    void whenHeatTypeIsHeaterAndStartTemperatureBiggestThat0ShouldHeaterRun2Times() throws HeatingException {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithHEATER)
@@ -152,13 +147,12 @@ class OvenTest {
     }
 
     @Test
-    void whenCoolAtFinishInBackingProgramIsTrueShoudTurnOnFanApterBakingPragram()  {
+    void whenCoolAtFinishInBackingProgramIsTrueShouldTurnOnFanApterBakingProgram()  {
 
         bakingProgram = BakingProgram.builder()
                 .withStages(programStageListWithHEATER)
                 .withInitialTemp(50).withCoolAtFinish(true)
                 .build();
-
 
         when(fan.isOn()).thenReturn(true);
 
