@@ -24,7 +24,7 @@ class OvenTest {
     Fan fan;
 
     int SAMPLE_TEMPERATURE = 100;
-    int ZERO_TEMPERATURE = 100;
+    int ZERO_TEMPERATURE = 0;
     int SAMPLE_STAGE_TIME = 50;
 
     List<ProgramStage> programStageList = List.of(
